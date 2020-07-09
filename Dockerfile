@@ -2,7 +2,7 @@
 FROM ssidk/bifrost-base:2.0.5
 
 #- These are variables that are used at build-time--------------------------------------------------
-ARG version="v2.3.15"
+ARG version="v1.0.0"
 ARG last_updated="10/07/2020"
 ARG name="pointfinder"
 ARG full_name="${name}"
@@ -18,7 +18,7 @@ LABEL \
 #- Tools to install:start---------------------------------------------------------------------------
 RUN \
     conda install -yq -c conda-forge -c bioconda -c defaults bbmap==38.58; \
-    conda install -yq -c default -c bioconda -c conda-forge blast; \
+    conda install -yq -c conda-forge -c bioconda -c defaults kma; \
     conda install -yq -c default -c bioconda -c conda-forge biopython; \
     pip install cgecore
 #- Tools to install:end ----------------------------------------------------------------------------
