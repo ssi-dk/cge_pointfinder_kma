@@ -1,0 +1,58 @@
+#-Information---------------------------------------------------------------------------------------
+name: pointfinder
+version: 2.3.15
+#---------------------------------------------------------------------------------------------------
+
+#-Details-------------------------------------------------------------------------------------------
+details:
+  category: resistance
+  schema_version: 2.0
+  target: sample
+  type: pipeline
+  recommendation: recommended
+  description: >
+    Finds chromosomal point mutations with the CGE pointfinder tool
+#---------------------------------------------------------------------------------------------------
+
+#-Docker location-----------------------------------------------------------------------------------
+dockerfile: &dockerfile "docker://stefanocardinale/pointfinder:2.3.15"
+#---------------------------------------------------------------------------------------------------
+
+#-Options-------------------------------------------------------------------------------------------
+options:
+#---------------------------------------------------------------------------------------------------
+
+#-Required resource files---------------------------------------------------------------------------
+resources:
+  database_path: "/bifrost_resources/pointfinder_db/"
+  adapters_fasta: "/bifrost_resources/adapters.fasta"
+#---------------------------------------------------------------------------------------------------
+
+#-Requirements to run component---------------------------------------------------------------------
+requirements:
+  sample:
+    properties:
+      paired_reads:
+        summary:
+          data:
+#---------------------------------------------------------------------------------------------------
+
+#-DB Value changes (excluding component output)-----------------------------------------------------
+db_values_changes:
+  files:
+   - "cge_pointfinder/contigs_blastn_results.tsv"
+   - "cge_pointfinder/contigs.fasta"
+  sample:
+    properties:
+      resistance:
+        summary:  # see sample_component summary
+        component:
+          _id: 
+          date:  # ObjectId
+    report:
+      resistance:
+  sample_component:
+    summary:
+    results:
+      cge_pointfinder/contigs_blastn_results.tsv: {}
+#---------------------------------------------------------------------------------------------------
