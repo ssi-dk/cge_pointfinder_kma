@@ -2,9 +2,9 @@
 FROM ssidk/bifrost-base:2.0.5
 
 #- These are variables that are used at build-time--------------------------------------------------
-ARG version="v1.0.3"
+ARG version="v1.0.4"
 ARG last_updated="10/07/2020"
-ARG name="pointfinder"
+ARG name="cge_pointfinder_kma"
 ARG full_name="${name}"
 
 #- label instructions are key-value pairs that add metadata to the image----------------------------
