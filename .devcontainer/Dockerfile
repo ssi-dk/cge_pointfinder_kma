@@ -2,8 +2,8 @@
 FROM ssidk/bifrost-base:2.0.5
 
 #- These are variables that are used at build-time--------------------------------------------------
-ARG version="v1.0.5"
-ARG last_updated="13/07/2020"
+ARG version="v1.0.4"
+ARG last_updated="10/07/2020"
 ARG name="cge_pointfinder_kma"
 ARG full_name="${name}"
 
@@ -35,7 +35,11 @@ RUN cd /bifrost && \
     git clone --branch ${version} --recurse-submodules https://github.com/stefanocardinale/${full_name}.git ${name};
 #- Source code:end ---------------------------------------------------------------------------------
 
+#- Mounts ------------------------------------------------------------------------
+#- Set up entry point:end ------
+VOLUME /Users/stefanocardinale/Documents/SSI/BeONE/testing_env/NEW/samples
 #- Set up entry point:start ------------------------------------------------------------------------
+
 ENV PATH /bifrost/${name}/:$PATH
 ENTRYPOINT ["launcher.py"]
 CMD ["launcher.py", "--help"]

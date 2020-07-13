@@ -6,9 +6,9 @@ from bifrostlib import datahandling
 os.umask(0o2)
 bifrost_sampleComponentObj = datahandling.SampleComponentObj(config["sample_id"], config["component_id"], path=os.getcwd())
 sample_name, component_name, dockerfile, options, bifrost_resources = bifrost_sampleComponentObj.load()
-provided_species = bifrost_sampleComponentObj.get_sample_properties_by_category("sample_info")['provided_species']
+#provided_species = bifrost_sampleComponentObj.get_sample_properties_by_category("sample_info")['provided_species']
 
-pointfinder_db = {'Salmonella enterica': 'salmonella', 'Campylobacter jejuni': 'campylobacter', "E.coli": "escherichia_coli"}
+#pointfinder_db = {'S.enterica': 'salmonella', 'Campylobacter jejuni': 'campylobacter', "E.coli": "escherichia_coli"}
 
 onerror:
     bifrost_sampleComponentObj.failure()
@@ -69,51 +69,6 @@ rule setup__filter_reads_with_bbduk:
     shell:
         "bbduk.sh in={input.reads[0]} in2={input.reads[1]} out={output.filtered_reads} ref={params.adapters} ktrim=r k=23 mink=11 hdist=1 tbo qtrim=r minlength=30 json=t 1> {log.out_file} 2> {log.err_file}"
 
-
-rule_name = "assembly_check__combine_reads_with_bbmerge"
-rule assembly_check__combine_reads_with_bbmerge:
-    # Static
-    message:
-        "Running step:" + rule_name
-    shadow:
-        "shallow"
-    log:
-        out_file = rules.setup.params.folder + "/log/" + rule_name + ".out.log",
-        err_file = rules.setup.params.folder + "/log/" + rule_name + ".err.log",
-    benchmark:
-        rules.setup.params.folder + "/benchmarks/" + rule_name + ".benchmark"
-    # Dynamic
-    input:
-        filtered_reads = rules.setup__filter_reads_with_bbduk.output.filtered_reads,
-    output:
-        merged_reads = temp(rules.setup.params.folder + "/merged.fastq"),
-        unmerged_reads = temp(rules.setup.params.folder + "/unmerged.fastq")
-    shell:
-        "bbmerge.sh in={input.filtered_reads} out={output.merged_reads} outu={output.unmerged_reads} 1> {log.out_file} 2> {log.err_file}"
-
-
-rule_name = "assembly__quick_assembly_with_tadpole"
-rule assembly__quick_assembly_with_tadpole:
-    # Static
-    message:
-        "Running step:" + rule_name
-    shadow:
-        "shallow"
-    log:
-        out_file = rules.setup.params.folder + "/log/" + rule_name + ".out.log",
-        err_file = rules.setup.params.folder + "/log/" + rule_name + ".err.log",
-    benchmark:
-        rules.setup.params.folder + "/benchmarks/" + rule_name + ".benchmark"
-    # Dynamic
-    input:
-        merged_reads = rules.assembly_check__combine_reads_with_bbmerge.output.merged_reads,
-        unmerged_reads = rules.assembly_check__combine_reads_with_bbmerge.output.unmerged_reads
-    output:
-        contigs = rules.setup.params.folder + "/contigs.fasta"
-    shell:
-        "tadpole.sh in={input.merged_reads},{input.unmerged_reads} out={output.contigs} 1> {log.out_file} 2> {log.err_file}"
-    
-    
 rule_name = "cge_pointfinder"
 rule cge_pointfinder:
     # Static
@@ -126,14 +81,16 @@ rule cge_pointfinder:
         rules.setup.params.folder + "/benchmarks/" + rule_name + ".benchmark"
     # Dynamic
     input:
-        contigs = rules.assembly__quick_assembly_with_tadpole.output
+        #reads = bifrost_sampleComponentObj.get_reads()
+        reads = rules.setup__filter_reads_with_bbduk.output
     output:
-        #complete = rules.setup.params.folder + "/data_pointfinder.json",
-        outfile = touch(rules.setup.params.folder + "/pointfinder_completed")
+        #summary = touch(rules.all.input)
+        complete = rules.setup.params.folder + "/resistance/filtered_kma_results.tsv"
+        #outfile = touch(rules.setup.params.folder + "/pointfinder_completed")
     params:
-        outfolder = rules.setup.params.folder,
+        #outfolder = rules.setup.params.folder,
         sampleComponentObj = bifrost_sampleComponentObj,
-        organism = pointfinder_db.get(provided_species,"ERROR")
+        #organism = pointfinder_db.get(provided_species,"ERROR")
     script:
         os.path.join(os.path.dirname(workflow.snakefile), "scripts/rule__cge_pointfinder.py")
 #* Dynamic section: end ****************************************************************************
@@ -150,7 +107,7 @@ rule datadump_pointfinder:
         rules.setup.params.folder + "/benchmarks/" + rule_name + ".benchmark"
     # Dynamic
     input:
-        rules.cge_pointfinder.output.outfile
+        rules.cge_pointfinder.output.complete
     output:
         summary = touch(rules.all.input)
     params:

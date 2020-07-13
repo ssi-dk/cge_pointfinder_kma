@@ -1,6 +1,6 @@
 #-Information---------------------------------------------------------------------------------------
 name: cge_pointfinder_kma
-version: 1.0.4
+version: 1.0.5
 #---------------------------------------------------------------------------------------------------
 
 #-Details-------------------------------------------------------------------------------------------
@@ -15,16 +15,20 @@ details:
 #---------------------------------------------------------------------------------------------------
 
 #-Docker location-----------------------------------------------------------------------------------
-dockerfile: &dockerfile "docker://stefanocardinale/cge_pointfinder_kma:1.0.4"
+dockerfile: &dockerfile "docker://stefanocardinale/cge_pointfinder_kma:1.0.5"
 #---------------------------------------------------------------------------------------------------
 
 #-Options-------------------------------------------------------------------------------------------
 options:
+  species_mapping:
+    "Campylobacter jejuni": [campylobacter]
+    "Escherichia coli": [escherichia_coli]
+    "Salmonella enterica": [salmonella]
 #---------------------------------------------------------------------------------------------------
 
 #-Required resource files---------------------------------------------------------------------------
 resources:
-  database_path: "/bifrost_resources/pointfinder_db/"
+  database_path: "bifrost/cge_pointfinder_kma/pointfinder_db"
   adapters_fasta: "/bifrost_resources/adapters.fasta"
 #---------------------------------------------------------------------------------------------------
 
@@ -40,8 +44,7 @@ requirements:
 #-DB Value changes (excluding component output)-----------------------------------------------------
 db_values_changes:
   files:
-   - "cge_pointfinder_kma/contigs_blastn_results.tsv"
-   - "cge_pointfinder_kma/contigs.fasta"
+   - "cge_pointfinder_kma/resistance/filtered_kma_results.tsv"
   sample:
     properties:
       resistance:
@@ -54,5 +57,5 @@ db_values_changes:
   sample_component:
     summary:
     results:
-      cge_pointfinder_kma/contigs_blastn_results.tsv: {}
+      cge_pointfinder_kma/resistance/filtered_kma_results.tsv: {}
 #---------------------------------------------------------------------------------------------------
