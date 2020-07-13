@@ -1,3 +1,0 @@
-[submodule "pointfinder_db"]
-	path = pointfinder_db
-	url = https://git@bitbucket.org/genomicepidemiology/pointfinder_db.git
