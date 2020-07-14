@@ -24,6 +24,16 @@ options:
     "Campylobacter jejuni": [campylobacter]
     "Escherichia coli": [escherichia_coli]
     "Salmonella enterica": [salmonella]
+    "Enterococcus faecalis": [enterococcus_faecalis]
+    "Enterococcus faecium": [enterococcus_faecium]
+    "Helicobacter pylori": [helicobacter_pylori]
+    "Klebsiella pneumoniae": [klebsiella]
+    "Klebsiella oxytoca": [klebsiella]
+    "Klebsiella aerogenes": [klebsiella]
+    "Mycobacterium tuberculosis": [mycobacterium_tuberculosis]
+    "Neisseria gonorrhoeae": [neisseria_gonorrhoeae]
+    "Plasmodium falciparum": [plasmodium_falciparum]
+    "Staphylococcus aureus": [staphylococcus_aureus]
 #---------------------------------------------------------------------------------------------------
 
 #-Required resource files---------------------------------------------------------------------------
